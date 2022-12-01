@@ -19,7 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\All_Included_libs.h" />
+    <ClInclude Include="Source\Game.h" />
+    <ClInclude Include="Source\Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
