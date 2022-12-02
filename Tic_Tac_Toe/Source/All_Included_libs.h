@@ -7,5 +7,6 @@
 
 #include <iostream>
 #include <string>
+#include <array>
 
 #endif // ALL_INCLUDED_LIBS_H

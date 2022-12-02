@@ -5,6 +5,8 @@
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 800;
 
+const int TOTAL_CELLS = 9;
+
 void GameLoop();
 
 class Game

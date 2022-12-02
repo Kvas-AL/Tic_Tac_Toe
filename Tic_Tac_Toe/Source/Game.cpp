@@ -1,5 +1,7 @@
 #include "Game.h"
 
+const int RECT_WEIGHT = 266;
+const int RECT_HEIGHT = 200;
 
 Game::Game() : m_Renderer(nullptr), m_Window(nullptr) {}
 
@@ -77,13 +79,14 @@ void GameLoop()
 	{
 		std::cout << "Faild to initialize!";
 	}
-	else if (!Game.LoadMedia())
-	{
-		std::cout << "Faild to load media!";
-	}
+	//else if (!Game.LoadMedia())
+	//{
+	//	std::cout << "Faild to load media!";
+	//}
 	else
 	{
 		SDL_Event e;
+		std::array<SDL_Point, TOTAL_CELLS> Points;
 		bool quit = false;
 
 		while (!quit)
@@ -98,9 +101,26 @@ void GameLoop()
 			SDL_SetRenderDrawColor(Game.GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
 			SDL_RenderClear(Game.GetRenderer());
 
-			SDL_Rect fillRect = { SCREEN_HEIGHT / 4,SCREEN_WIDTH / 4,SCREEN_HEIGHT / 2,SCREEN_WIDTH / 2 };
-			SDL_SetRenderDrawColor(Game.GetRenderer(), 0xFF, 0x00, 0x00, 0xFF);
-			SDL_RenderFillRect(Game.GetRenderer(), &fillRect);
+			if (!Points.empty())
+			{
+				int i = 0;
+				for (int h = SCREEN_HEIGHT / SCREEN_HEIGHT - 1; h <= SCREEN_HEIGHT; h += RECT_HEIGHT)
+				{
+					for (int w = SCREEN_WIDTH / SCREEN_WIDTH; w <= SCREEN_WIDTH; w += RECT_WEIGHT)
+					{
+						Points[i].x = w;
+						Points[i].y = h;
+						++i;
+					}
+				}
+			}
+
+			SDL_SetRenderDrawColor(Game.GetRenderer(), 0x00, 0x00, 0x00, 0x00);
+			for (int i = 0; i < TOTAL_CELLS; ++i)
+			{
+				SDL_Rect RectangleCell = { Points[i].x,Points[i].y,RECT_WEIGHT,RECT_HEIGHT };
+				SDL_RenderDrawRect(Game.GetRenderer(), &RectangleCell);
+			}
 
 			SDL_RenderPresent(Game.GetRenderer());
 		}
