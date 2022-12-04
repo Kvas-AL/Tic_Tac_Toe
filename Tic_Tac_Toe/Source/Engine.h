@@ -1,30 +1,22 @@
 #pragma once
 #include "All_Included_libs.h"
-#include "Texture.h"
 
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 800;
 
-const int TOTAL_CELLS = 9;
-
-void GameLoop();
-
-class Game
+class Engine
 {
 public:
 
-	Game();
-	~Game();
+	Engine();
+	~Engine();
 
 	SDL_Renderer* GetRenderer();
 	SDL_Window* GetWindow();
 
 	bool Init();
 
-	bool LoadMedia();
-
 private:
 	SDL_Window* m_Window;
 	SDL_Renderer* m_Renderer;
-	Texture m_Texture;
 };

@@ -19,14 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Game.cpp" />
+    <ClCompile Include="Source\GameLogic.cpp" />
+    <ClCompile Include="Source\Engine.cpp" />
+    <ClCompile Include="Source\GameLoop.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\GameLogic.h" />
+    <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\All_Included_libs.h" />
-    <ClInclude Include="Source\Game.h" />
+    <ClInclude Include="Source\GameLoop.h" />
     <ClInclude Include="Source\Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Data\CircleSprite.png" />
+    <Image Include="Data\CrossSprite.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
