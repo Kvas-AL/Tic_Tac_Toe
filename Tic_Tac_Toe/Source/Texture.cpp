@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-Texture::Texture() :m_Texture(nullptr){}
+Texture::Texture() :m_Texture(nullptr) {}
 
 Texture::~Texture()
 {
@@ -15,7 +15,7 @@ SDL_Texture* Texture::GetTexture()
 
 void Texture::TextureRender(int x, int y, SDL_Renderer* Renderer)
 {
-	SDL_Rect RenderQuad = { x,y,RECT_WEIGHT,RECT_HEIGHT };
+	SDL_Rect RenderQuad = { x,y,RECT_WIDTH,RECT_HEIGHT };
 
 	SDL_RenderCopy(Renderer, m_Texture, NULL, &RenderQuad);
 }

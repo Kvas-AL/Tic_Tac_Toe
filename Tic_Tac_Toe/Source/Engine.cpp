@@ -34,7 +34,7 @@ bool Engine::Init()
 	}
 	else
 	{
-		m_Window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_HEIGHT, SCREEN_WIDTH, SDL_WINDOW_SHOWN);
+		m_Window = SDL_CreateWindow("Tic Tac Toe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (!(m_Window))
 		{
 			std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";

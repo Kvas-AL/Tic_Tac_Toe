@@ -5,9 +5,9 @@ std::array<SDL_Point, TOTAL_CELLS> GetPoints()
 	std::array<SDL_Point, TOTAL_CELLS> CellPoints;
 
 	int i = 0;
-	for (int h = SCREEN_HEIGHT / SCREEN_HEIGHT - 1; h + RECT_HEIGHT < SCREEN_HEIGHT; h += RECT_HEIGHT)
+	for (int w = SCREEN_WIDTH / SCREEN_WIDTH; w + RECT_WIDTH <= SCREEN_WIDTH; w += RECT_WIDTH)
 	{
-		for (int w = SCREEN_WIDTH / SCREEN_WIDTH; w < SCREEN_WIDTH; w += RECT_WEIGHT)
+		for (int h = SCREEN_HEIGHT / SCREEN_HEIGHT - 1; h + RECT_HEIGHT <= SCREEN_HEIGHT; h += RECT_HEIGHT)
 		{
 			CellPoints[i].x = w;
 			CellPoints[i].y = h;
@@ -18,19 +18,43 @@ std::array<SDL_Point, TOTAL_CELLS> GetPoints()
 	return CellPoints;
 }
 
+bool TextureInit(std::array<Texture, TOTAL_TEXTURE>& AllTextures, Engine Engine)
+{
+	bool successful = true;
+
+	for (int i = 0; i < TOTAL_TEXTURE; ++i)
+	{
+		switch (i)
+		{
+		case CROSS_TEXTURE: AllTextures[CROSS_TEXTURE].LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\CrossSprite.png", Engine.GetRenderer()); break;
+		case CIRCLE_TEXTURE: AllTextures[CIRCLE_TEXTURE].LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\CircleSprite.png", Engine.GetRenderer()); break;
+		case CROSS_WIN_SCREEN_TEXTURE: AllTextures[CROSS_WIN_SCREEN_TEXTURE].LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\CrossWinScreen.png", Engine.GetRenderer()); break;
+		case CIRCLE_WIN_SCREEN_TEXTURE: AllTextures[CIRCLE_WIN_SCREEN_TEXTURE].LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\CircleWinScreen.png", Engine.GetRenderer()); break;
+		case DRAW_WIN_SCREEN_TEXTURE: AllTextures[DRAW_WIN_SCREEN_TEXTURE].LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\DrawWinScreen.png", Engine.GetRenderer()); break;
+		}
+
+		if (AllTextures[i].GetTexture() == nullptr)
+		{
+			successful = false;
+		}
+	}
+
+	return successful;
+}
+
 void GameLoop()
 {
 	Engine Engine;
+	GameLogic Logic;
+	std::array<Texture, TOTAL_TEXTURE> AllTextures;
+
 	if (!Engine.Init())
 	{
 		std::cout << "Faild to initialize!";
 	}
 	else
 	{
-		Texture CircleTexture;
-		Texture CrossTexture;
-		if (!CircleTexture.LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\CircleSprite.png", Engine.GetRenderer())
-			|| !CrossTexture.LoadFromFile("C:\\CPP\\Tic_Tac_Toe\\Tic_Tac_Toe\\Data\\CrossSprite.png", Engine.GetRenderer()))
+		if (!TextureInit(AllTextures, Engine))
 		{
 			std::cout << "Faild to load images!";
 		}
@@ -39,7 +63,6 @@ void GameLoop()
 			bool quit = false;
 
 			SDL_Event e;
-			GameLogic Logic;
 			const std::array<SDL_Point, TOTAL_CELLS> Points = GetPoints();
 
 			while (!quit)
@@ -52,30 +75,40 @@ void GameLoop()
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
-						Logic.Turn(Points, e);
+						if (!Logic.GetWinner())
+						{
+							Logic.Turn(Points, e);
+						}
+						else
+						{
+							Logic.Restart();
+						}
 					}
 				}
-				SDL_SetRenderDrawColor(Engine.GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(Engine.GetRenderer(), 0xC0, 0xC0, 0xC0, 0xC0);
 				SDL_RenderClear(Engine.GetRenderer());
 
 				SDL_SetRenderDrawColor(Engine.GetRenderer(), 0x00, 0x00, 0x00, 0x00);
 
-				int PointIter = 0;
-				for (int i = 0; i < TOTAL_CELLS / 3; ++i)
+				if (!Logic.GetWinner())
 				{
-					for (int y = 0; y < TOTAL_CELLS / 3; ++y)
+					int PointIter = 0;
+					for (int i = 0; i < TOTAL_CELLS / 3; ++i)
 					{
-						SDL_Rect RectangleCell = { Points[PointIter].x,Points[PointIter].y,RECT_WEIGHT,RECT_HEIGHT };
-						SDL_RenderDrawRect(Engine.GetRenderer(), &RectangleCell);
-						if (Logic.GetCellValue(i, y) == 1)
+						for (int y = 0; y < TOTAL_CELLS / 3; ++y)
 						{
-							CrossTexture.TextureRender(Points[PointIter].x, Points[PointIter].y, Engine.GetRenderer());
+							SDL_Rect RectangleCell = { Points[PointIter].x,Points[PointIter].y,RECT_WIDTH,RECT_HEIGHT };
+							SDL_RenderDrawRect(Engine.GetRenderer(), &RectangleCell);
+							if (Logic.GetCellValue(i, y) == 1)
+							{
+								AllTextures[CROSS_TEXTURE].TextureRender(Points[PointIter].x, Points[PointIter].y, Engine.GetRenderer());
+							}
+							else if (Logic.GetCellValue(i, y) == 2)
+							{
+								AllTextures[CIRCLE_TEXTURE].TextureRender(Points[PointIter].x, Points[PointIter].y, Engine.GetRenderer());
+							}
+							++PointIter;
 						}
-						else if (Logic.GetCellValue(i, y) == 2)
-						{
-							CircleTexture.TextureRender(Points[PointIter].x, Points[PointIter].y, Engine.GetRenderer());
-						}
-						++PointIter;
 					}
 				}
 				SDL_RenderPresent(Engine.GetRenderer());

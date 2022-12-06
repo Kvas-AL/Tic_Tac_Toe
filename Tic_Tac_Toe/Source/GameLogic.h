@@ -2,15 +2,18 @@
 #include "All_Included_libs.h"
 #include "Texture.h"
 
-extern const int RECT_WEIGHT;
+extern const int RECT_WIDTH;
 extern const int RECT_HEIGHT;
 
 const int TOTAL_CELLS = 9;
 
-enum Victory
+enum Notation
 {
-	CROSS = 1,
-	CIRCLE
+	EMPTY = 0,
+	CROSS,
+	CIRCLE,
+
+	NOBODY
 };
 
 class GameLogic
@@ -20,12 +23,14 @@ public:
 	GameLogic();
 
 	int GetCellValue(int i, int y);
-	bool GetTurn();
-	int GetVictory();
+	bool GetCrossTurn();
+	int GetWinner();
 
 	void Turn(const std::array<SDL_Point, TOTAL_CELLS>& Points, SDL_Event event);
 
 	void VictoryCheck();
+
+	void Restart();
 
 private:
 	std::array<std::array<int, TOTAL_CELLS / 3>, TOTAL_CELLS / 3> m_PlayingFild;
