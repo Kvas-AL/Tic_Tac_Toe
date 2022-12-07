@@ -20,7 +20,7 @@ https://drive.google.com/uc?export=downloads&id=1lVY8yPXdc8R955OHtpxwhg_wVaUMd18
 <br/>
 
 Made using C++/SDL. <br/>
-### Libraries must be included in order to compile correctly:
+### To compile correctly, you need to include libraries:
 ```
 SDL2.lib
 SDL2main.lib
