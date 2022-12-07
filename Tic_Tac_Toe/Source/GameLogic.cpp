@@ -30,7 +30,8 @@ void GameLogic::Turn(const std::array<SDL_Point, TOTAL_CELLS>& Points, SDL_Event
 	{
 		for (int j = 0; j < TOTAL_CELLS / 3; ++j)
 		{
-			if (!(x<Points[PointsIter].x || x>Points[PointsIter].x + RECT_HEIGHT || y<Points[PointsIter].y || y>Points[PointsIter].y + RECT_WIDTH))
+			// Fix and check whether there was a click on the cell
+			if (!(x<Points[PointsIter].x || x>Points[PointsIter].x + RECT_WIDTH || y<Points[PointsIter].y || y>Points[PointsIter].y + RECT_HEIGHT))
 			{
 				if (m_PlayingFild[i][j] == 0)
 				{
@@ -57,81 +58,85 @@ void GameLogic::Turn(const std::array<SDL_Point, TOTAL_CELLS>& Points, SDL_Event
 
 void GameLogic::VictoryCheck()
 {
-	for (int i = 0, full = 0; i < TOTAL_CELLS / 3; ++i)
+	// Data for diagonal check only
+	int CrossDiagonalLeft = 0, CrossDiagonalRight = 0;
+	int CircelDiagonalLeft = 0, CircelDiagonalRight = 0;
+	int RightLeft = TOTAL_CELLS / 3 - 1;
+
+	for (int i = 0; i < TOTAL_CELLS / 3; ++i)
 	{
-		if (std::all_of(m_PlayingFild[i].begin(), m_PlayingFild[i].end(), [](int element) {return element != 0; }))
+		// Horizontal&Vertical check
+		if (m_PlayingFild[i][0] == 1 && m_PlayingFild[i][1] == 1 && m_PlayingFild[i][2] == 1
+			|| m_PlayingFild[0][i] == 1 && m_PlayingFild[1][i] == 1 && m_PlayingFild[2][i] == 1)
 		{
-			++full;
+			m_Victory = CROSS;
+			break;
+		}
+		else if (m_PlayingFild[i][0] == 2 && m_PlayingFild[i][1] == 2 && m_PlayingFild[i][2] == 2
+			|| m_PlayingFild[0][i] == 2 && m_PlayingFild[1][i] == 2 && m_PlayingFild[2][i] == 2)
+		{
+			m_Victory = CIRCLE;
+			break;
 		}
 
-		if (full == 3)
+		// Diagonal check
+		for (int LeftRight = 0; LeftRight < TOTAL_CELLS / 3; ++LeftRight)
 		{
-			m_Victory = NOBODY;
+			if (LeftRight == i)
+			{
+				if (m_PlayingFild[i][LeftRight] == CROSS)
+				{
+					++CrossDiagonalLeft;
+				}
+				else if (m_PlayingFild[i][LeftRight] == CIRCLE)
+				{
+					++CircelDiagonalLeft;
+				}
+			}
+
+			if (RightLeft == LeftRight)
+			{
+				if (m_PlayingFild[i][RightLeft] == CROSS)
+				{
+					++CrossDiagonalRight;
+				}
+				else if (m_PlayingFild[i][RightLeft] == CIRCLE)
+				{
+					++CircelDiagonalRight;
+				}
+			}
 		}
-	}
-
-	if (!(m_Victory))
-	{
-		int CrossDiagonalLeft = 0, CrossDiagonalRight = 0;
-		int CircelDiagonalLeft = 0, CircelDiagonalRight = 0;
-		int RightLeft = TOTAL_CELLS / 3 - 1;
-
-		for (int i = 0; i < TOTAL_CELLS / 3; ++i)
+		if (CrossDiagonalLeft == 3 || CrossDiagonalRight == 3
+			|| CircelDiagonalLeft == 3 || CircelDiagonalRight == 3)
 		{
-			if (m_PlayingFild[i][0] == 1 && m_PlayingFild[i][1] == 1 && m_PlayingFild[i][2] == 1
-				|| m_PlayingFild[0][i] == 1 && m_PlayingFild[1][i] == 1 && m_PlayingFild[2][i] == 1)
+			if (CrossDiagonalLeft == 3 || CrossDiagonalRight == 3)
 			{
 				m_Victory = CROSS;
 				break;
 			}
-			else if (m_PlayingFild[i][0] == 2 && m_PlayingFild[i][1] == 2 && m_PlayingFild[i][2] == 2
-				|| m_PlayingFild[0][i] == 2 && m_PlayingFild[1][i] == 2 && m_PlayingFild[2][i] == 2)
+			else
 			{
 				m_Victory = CIRCLE;
 				break;
 			}
+		}
+		--RightLeft;
+	}
 
-			for (int LeftRight = 0; LeftRight < TOTAL_CELLS / 3; ++LeftRight)
+	// Checking for fullness of the entire playing field if the winner was not previously determined
+	if (!(m_Victory))
+	{
+		for (int i = 0, full = 0; i < TOTAL_CELLS / 3; ++i)
+		{
+			if (std::all_of(m_PlayingFild[i].begin(), m_PlayingFild[i].end(), [](int element) {return element != 0; }))
 			{
-				if (LeftRight == i)
-				{
-					if (m_PlayingFild[i][LeftRight] == CROSS)
-					{
-						++CrossDiagonalLeft;
-					}
-					else if (m_PlayingFild[i][LeftRight] == CIRCLE)
-					{
-						++CircelDiagonalLeft;
-					}
-				}
+				++full;
+			}
 
-				if (RightLeft == LeftRight)
-				{
-					if (m_PlayingFild[i][RightLeft] == CROSS)
-					{
-						++CrossDiagonalRight;
-					}
-					else if (m_PlayingFild[i][RightLeft] == CIRCLE)
-					{
-						++CircelDiagonalRight;
-					}
-				}
-			}
-			if (CrossDiagonalLeft == 3 || CrossDiagonalRight == 3
-				|| CircelDiagonalLeft == 3 || CircelDiagonalRight == 3)
+			if (full == 3)
 			{
-				if (CrossDiagonalLeft == 3 || CrossDiagonalRight == 3)
-				{
-					m_Victory = CROSS;
-					break;
-				}
-				else
-				{
-					m_Victory = CIRCLE;
-					break;
-				}
+				m_Victory = NOBODY;
 			}
-			--RightLeft;
 		}
 	}
 }

@@ -25,5 +25,6 @@ enum TextureNumbering
 };
 
 std::array<SDL_Point, TOTAL_CELLS> GetPoints();
+bool TextureInit(std::array<Texture, TOTAL_TEXTURE>& AllTextures, Engine& Engine);
 
 void GameLoop();

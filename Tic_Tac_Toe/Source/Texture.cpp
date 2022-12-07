@@ -1,11 +1,13 @@
 #include "Texture.h"
 
-Texture::Texture() :m_Texture(nullptr) {}
+Texture::Texture() :m_Texture(nullptr), m_Width(0), m_Height(0) {}
 
 Texture::~Texture()
 {
 	SDL_DestroyTexture(m_Texture);
 	m_Texture = nullptr;
+	m_Width = 0;
+	m_Height = 0;
 }
 
 SDL_Texture* Texture::GetTexture()
@@ -15,7 +17,7 @@ SDL_Texture* Texture::GetTexture()
 
 void Texture::TextureRender(int x, int y, SDL_Renderer* Renderer)
 {
-	SDL_Rect RenderQuad = { x,y,RECT_WIDTH,RECT_HEIGHT };
+	SDL_Rect RenderQuad = { x,y,m_Width,m_Height };
 
 	SDL_RenderCopy(Renderer, m_Texture, NULL, &RenderQuad);
 }
@@ -38,8 +40,12 @@ bool Texture::LoadFromFile(std::string path, SDL_Renderer* Renderer)
 			std::cout << "Unable to create texture from " << path << "! SDL Error: " << SDL_GetError() << "\n";
 			succsesful = false;
 		}
+		else
+		{
+			m_Width = loadedSurface->w;
+			m_Height = loadedSurface->h;
+		}
 		SDL_FreeSurface(loadedSurface);
 	}
-
 	return succsesful;
 }
