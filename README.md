@@ -22,7 +22,7 @@ https://drive.google.com/uc?export=downloads&id=1lVY8yPXdc8R955OHtpxwhg_wVaUMd18
 Made using C++/SDL. <br/>
 ### To compile correctly, you need to include libraries:
 ```
-SDL2.lib
-SDL2main.lib
-SDL2_image.lib
+SDL2
+SDL2main
+SDL2_image
 ```
