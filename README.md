@@ -1,5 +1,5 @@
 # Tic_Tac_Toe
-A simple game without artificial intelligence designed for two players. Instead of the standard crosses and noughts, the ankh of the camarilla (crosses) and anarchs (noughts) is used.
+A simple game without artificial intelligence designed for two players.
 <details><summary>Image</summary>
 <p>
 
